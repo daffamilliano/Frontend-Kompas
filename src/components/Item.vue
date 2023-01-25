@@ -4,10 +4,10 @@
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah Item</button>
 <div class="container">
 <div class="row">
-<div class="card col-sm" style="width: 100rem; margin: 8px;" v-for="details of detail" :key="details.id">
+<div class="card col-sm" style="width: 100rem; margin: 8px;" v-for="(item, tanggal) in groupData" :key="tanggal">
     <div class="card-body">
-    <h5 class="card-title">{{ details.tanggal }}</h5>
-    <div><p class="card-text">{{ details.jam }}</p><p class="card-text">{{ details.nama }}</p><p class="card-text">{{ details.pengeluaraan }}</p></div>
+    <h5 class="card-title">{{ item.tanggal }}</h5>
+    <div><p class="card-text">{{ item.jam }}</p><p class="card-text">{{ item.nama }}</p><p class="card-text">{{ item.pengeluaraan }}</p></div>
   </div>
 </div>
 </div>
@@ -66,6 +66,16 @@ export default {
         total += expense.pengeluaraan;
       });
       return total;
+    },
+    groupData(){
+      this.detail.reduce((acc, item) => {
+            if (acc[item.tanggal].tanggal === item.tanggal) {
+                acc[item.tanggal].tanggal += item.tanggal;
+            } else {
+              acc[item.tanggal].tanggal = item.tanggal;
+            }
+            return acc;
+        }, []);
     }
   },
      methods: {
@@ -75,11 +85,6 @@ export default {
         pengeluaraan: this.itempengeluaraan,
       });
       this.detail = [...this.detail, res.data];
-      date = new Date();
-      jam = date.getHours();
-      tanggal = date.getDate();
-      this.itemtanggal = tanggal;
-      this.itemjam = jam;
       this.itemnama = "";
       this.itempengeluaraan = "";
     },
