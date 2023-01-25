@@ -1,6 +1,6 @@
 <template>
 <h1>Diari Jajan Februari 2021</h1>
-<h4>Pengeluaran Bulan Ini</h4>
+<h4>Pengeluaran Bulan Ini {{ totalExpenses }}</h4>
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah Item</button>
 <div class="container">
 <div class="row">
@@ -59,6 +59,15 @@ export default {
       console.log(error);
     }
     },
+    computed: {
+      totalExpenses() {
+        let total = 0;
+      this.detail.forEach(expense => {
+        total += expense.pengeluaraan;
+      });
+      return total;
+    }
+  },
      methods: {
     async addItem() {
       const res = await axios.post(`http://localhost:3000/detail`, {
