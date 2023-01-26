@@ -7,8 +7,9 @@
 <div class="card col-sm" style="width: 100rem; margin: 8px;" v-for="(detail, tanggal) in groupData" :key="tanggal">
     <div class="card-body">
     <h5 class="card-title">{{ tanggal }}</h5>
-    <div v-for="item in detail"><p class="card-text">{{ item.jam }}</p><p class="card-text">{{ item.nama }}</p><p class="card-text">{{ item.pengeluaraan }}</p></div>
-  </div>
+    <div>{{ totalHarian }}</div>
+    <div v-for="item in detail" :key="detail">{{ item.jam }}&nbsp;&nbsp;{{ item.nama }}&nbsp;&nbsp;{{ item.pengeluaraan }}</div>
+    </div>
 </div>
 </div>
 </div>
@@ -68,13 +69,25 @@ export default {
       return total;
     },
     groupData(){
-      return this.detail.reduce((acc, curr) => {
-        if (!acc[curr.tanggal]) {
-          acc[curr.tanggal] = [];
+      return this.detail.reduce((add, item) => {
+        if (!add[item.tanggal]) {
+          add[item.tanggal] = [];
         }
-        acc[curr.tanggal].push(curr);
-        return acc;
+        add[item.tanggal].push(item);
+        return add;
       }, {});
+    },
+    totalHarian(){
+      this.detail
+    .filter(item => item.tanggal)
+    .reduce((total, item) => {
+    let date = item.tanggal;
+      if(!total[date]) {
+        total[date] = 0;
+      }
+      total[date] += item.pengeluaraan;
+    });
+      return total;
     }
   },
      methods: {
