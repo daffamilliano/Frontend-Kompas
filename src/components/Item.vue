@@ -4,10 +4,10 @@
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah Item</button>
 <div class="container">
 <div class="row">
-<div class="card col-sm" style="width: 100rem; margin: 8px;" v-for="(item, tanggal) in groupData" :key="tanggal">
+<div class="card col-sm" style="width: 100rem; margin: 8px;" v-for="(detail, tanggal) in groupData" :key="tanggal">
     <div class="card-body">
-    <h5 class="card-title">{{ item.tanggal }}</h5>
-    <div><p class="card-text">{{ item.jam }}</p><p class="card-text">{{ item.nama }}</p><p class="card-text">{{ item.pengeluaraan }}</p></div>
+    <h5 class="card-title">{{ tanggal }}</h5>
+    <div v-for="item in detail"><p class="card-text">{{ item.jam }}</p><p class="card-text">{{ item.nama }}</p><p class="card-text">{{ item.pengeluaraan }}</p></div>
   </div>
 </div>
 </div>
@@ -68,14 +68,13 @@ export default {
       return total;
     },
     groupData(){
-      this.detail.reduce((acc, item) => {
-            if (acc[item.tanggal].tanggal === item.tanggal) {
-                acc[item.tanggal].tanggal += item.tanggal;
-            } else {
-              acc[item.tanggal].tanggal = item.tanggal;
-            }
-            return acc;
-        }, []);
+      return this.detail.reduce((acc, curr) => {
+        if (!acc[curr.tanggal]) {
+          acc[curr.tanggal] = [];
+        }
+        acc[curr.tanggal].push(curr);
+        return acc;
+      }, {});
     }
   },
      methods: {
